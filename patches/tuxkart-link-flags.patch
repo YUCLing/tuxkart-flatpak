@@ -1,0 +1,14 @@
+# fix: remove problematic linker args
+diff --git a/configure b/configure
+index 3ca053a..a3381ed 100755
+--- a/configure
++++ b/configure
+@@ -4096,7 +4096,7 @@ fi
+ 
+ fi
+ 
+-  x_suffix="$X_LIBS $X_PRE_LIBS -lpthread -lX11 -lXi -lXext -lXmu $X_EXTRA_LIBS -lm"
++  x_suffix="$X_LIBS $X_PRE_LIBS -lpthread -lX11 -lXi -lXext $X_EXTRA_LIBS -lm"
+ 
+ echo "$as_me:4101: checking for glNewList in -lGL" >&5
+ echo $ECHO_N "checking for glNewList in -lGL... $ECHO_C" >&6

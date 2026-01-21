@@ -1,0 +1,14 @@
+# fix: remove problematic linker args
+diff --git a/configure b/configure
+index 4be4d39..85ea622 100755
+--- a/configure
++++ b/configure
+@@ -6746,7 +6746,7 @@ fi
+ 
+         LDFLAGS="$LDFLAGS $X_LIBS"
+ 
+-        LIBS="$LIBS $X_PRE_LIBS -lXi -lXmu -lXext -lX11 $X_EXTRA_LIBS -lm"
++        LIBS="$LIBS $X_PRE_LIBS -lXi -lXext -lX11 $X_EXTRA_LIBS -lm"
+ 
+ 
+ 
