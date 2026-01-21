@@ -41,6 +41,7 @@ modules:
       - type: patch
         paths:
           - patches/tuxkart-link-flags.patch
+          - patches/tuxkart-title-menu-resizing.patch
       
       - type: file
         path: net.sourceforge.TuxKart.desktop

@@ -1,0 +1,22 @@
+# fix: title menu doesn't respond to window resizing
+diff --git a/src/start_tuxkart.cxx b/src/start_tuxkart.cxx
+index a323920..99c30b6 100644
+--- a/src/start_tuxkart.cxx
++++ b/src/start_tuxkart.cxx
+@@ -34,6 +34,7 @@ static char *track_names  [ MAX_TRACKS ] ;
+ static char *track_idents [ MAX_TRACKS ] ;
+ 
+ extern int tuxkart_main ( int nl, char *track ) ;
++extern void reshape ( int w, int h ) ;
+ 
+ static void switch_to_game ()
+ {
+@@ -292,7 +293,7 @@ int main ( int argc, char **argv )
+ 
+   pwInit ( 0, 0, width, height, FALSE, "Tux Kart by Steve Baker", TRUE, 0 ) ;
+ 
+-  pwSetCallbacks ( keyfn, mousefn, motionfn, NULL, NULL ) ;
++  pwSetCallbacks ( keyfn, mousefn, motionfn, reshape, NULL ) ;
+ 
+   puInit () ;
+   ssgInit () ;
