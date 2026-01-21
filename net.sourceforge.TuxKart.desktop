@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=TuxKart
+Comment=A classic 3D kart racing game with Tux
+Icon=net.sourceforge.TuxKart
+Exec=run-tuxkart
+Terminal=false
+Categories=Game;ArcadeGame;
+Keywords=race;kart;tux;linux;
+StartupNotify=false

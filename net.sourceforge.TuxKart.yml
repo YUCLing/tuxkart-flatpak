@@ -2,7 +2,7 @@ id: net.sourceforge.TuxKart
 runtime: org.freedesktop.Platform
 runtime-version: '25.08'
 sdk: org.freedesktop.Sdk
-command: /app/games/run-tuxkart
+command: /app/bin/run-tuxkart
 finish-args:
   - --socket=x11
   - --socket=pulseaudio
@@ -43,6 +43,9 @@ modules:
         url: https://tuxkart.sourceforge.net/dist/tuxkart-0.4.0.tar.gz
         sha256: 2d9048435ac558debf92d430efa55ccf15c68e1253c97648babe67437ff82c12
       
+      - type: file
+        path: net.sourceforge.TuxKart.desktop
+
       # Patch: The original makefile tries to install to /usr/local/games.
       # We need to nudge it to install binaries to /app/bin.
       - type: shell
@@ -58,6 +61,12 @@ modules:
 
     post-install:
       - |
-        echo '#!/bin/sh' > /app/games/run-tuxkart
-        echo 'exec padsp /app/games/tuxkart "$@"' >> /app/games/run-tuxkart
-        chmod +x /app/games/run-tuxkart
+        ffmpeg -i /app/share/games/tuxkart/images/tux_icon.rgb icon.png
+        install -Dm644 icon.png /app/share/icons/hicolor/64x64/apps/net.sourceforge.TuxKart.png
+        install -Dm644 net.sourceforge.TuxKart.desktop /app/share/applications/net.sourceforge.TuxKart.desktop
+
+      - |
+        mkdir -p /app/bin
+        echo '#!/bin/sh' > /app/bin/run-tuxkart
+        echo 'exec padsp /app/games/tuxkart "$@"' >> /app/bin/run-tuxkart
+        chmod +x /app/bin/run-tuxkart
