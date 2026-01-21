@@ -1,0 +1,63 @@
+id: net.sourceforge.TuxKart
+runtime: org.freedesktop.Platform
+runtime-version: '25.08'
+sdk: org.freedesktop.Sdk
+command: /app/games/run-tuxkart
+finish-args:
+  - --socket=x11
+  - --socket=pulseaudio
+  - --device=dri
+cleanup:
+  - /include
+  - '*.a'
+
+modules:
+  # -------------------------------------------------------------------------
+  # Module 1: PLIB (Dependency)
+  # TuxKart requires this library, which is essentially dead/legacy now.
+  # We build it from source and install it into /app/lib and /app/include
+  # -------------------------------------------------------------------------
+  - name: plib
+    buildsystem: autotools
+    sources:
+      - type: archive
+        url: https://plib.sourceforge.net/dist/plib-1.8.5.tar.gz
+        sha256: 485b22bf6fdc0da067e34ead5e26f002b76326f6371e2ae006415dea6a380a32
+      - type: shell
+        commands:
+          # Patch: Remove problematic linker flags from configure script
+          - sed -i 's/-lXmu//g' configure
+          - sed -i 's/-lXi//g' configure 
+          - sed -i 's/-lMesaGL//g' configure
+
+          # Patch: Fix broken ioctl signatures in sl.h, so padsp can understand requests
+          - sed -i 's/int ioctl ( int cmd, int param = 0 )/int ioctl ( unsigned long cmd, int param = 0 )/' src/sl/sl.h
+
+  # -------------------------------------------------------------------------
+  # Module 2: TuxKart (The Application)
+  # -------------------------------------------------------------------------
+  - name: tuxkart
+    buildsystem: autotools
+    sources:
+      - type: archive
+        url: https://tuxkart.sourceforge.net/dist/tuxkart-0.4.0.tar.gz
+        sha256: 2d9048435ac558debf92d430efa55ccf15c68e1253c97648babe67437ff82c12
+      
+      # Patch: The original makefile tries to install to /usr/local/games.
+      # We need to nudge it to install binaries to /app/bin.
+      - type: shell
+        commands:
+          # Fix install path: Install to /app/bin instead of /usr/local/games
+          - "sed -i 's|$(prefix)/games|$(prefix)/bin|g' Makefile.in"
+
+          # Patch: Remove problematic linker flags from configure script
+          - "sed -i 's/-lXmu//g' configure"
+
+    config-opts:
+      - --prefix=/app
+
+    post-install:
+      - |
+        echo '#!/bin/sh' > /app/games/run-tuxkart
+        echo 'exec padsp /app/games/tuxkart "$@"' >> /app/games/run-tuxkart
+        chmod +x /app/games/run-tuxkart

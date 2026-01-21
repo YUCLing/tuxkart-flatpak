@@ -1,0 +1,22 @@
+name: Build Workflow
+
+on:
+  workflow_call:
+    
+jobs:
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-48
+      options: --privileged
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: tux-kart.flatpak
+          manifest-path: net.sourceforge.TuxKart.yml
+          cache-key: flatpak-builder-${{ github.sha }}
