@@ -6,4 +6,14 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        include:
+          - manifest-path: tuxaqfh/net.sourceforge.TuxAQFH.yml
+            bundle: tux-aqfh.flatpak
+          - manifest-path: tuxkart/net.sourceforge.TuxKart.yml
+            bundle: tux-kart.flatpak
     uses: ./.github/workflows/build.yml
+    with:
+      manifest-path: ${{ matrix.manifest-path }}
+      bundle: ${{ matrix.bundle }}

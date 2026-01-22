@@ -1,0 +1,23 @@
+# fix: remove problematic linker args
+# fix: compile against plibjs
+diff --git a/configure b/configure
+index 0562f70..4d69767 100755
+--- a/configure
++++ b/configure
+@@ -503,6 +503,7 @@ fi
+ 
+ ac_ext=c
+ # CFLAGS is not in ac_cpp because -g, -O, etc. are not valid cpp options.
++CFLAGS="$CFLAGS -Wno-error=implicit-int"
+ ac_cpp='$CPP $CPPFLAGS'
+ ac_compile='${CC-cc} -c $CFLAGS $CPPFLAGS conftest.$ac_ext 1>&5'
+ ac_link='${CC-cc} -o conftest${ac_exeext} $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS 1>&5'
+@@ -2237,7 +2238,7 @@ fi
+ fi
+ 
+ 
+-  x_suffix="$X_LIBS $X_PRE_LIBS -lpthread -lX11 -lXi -lXext -lXmu $X_EXTRA_LIBS -lm"
++  x_suffix="$X_LIBS $X_PRE_LIBS -lpthread -lX11 -lXi -lXext $X_EXTRA_LIBS -lm -lplibjs"
+ 
+   
+   echo $ac_n "checking for glNewList in -lGL""... $ac_c" 1>&6

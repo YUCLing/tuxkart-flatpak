@@ -2,10 +2,17 @@ name: Build Workflow
 
 on:
   workflow_call:
+    inputs:
+      manifest-path:
+        required: true
+        type: string
+      bundle:
+        required: true
+        type: string
     
 jobs:
   build:
-    name: Build Application
+    name: Build ${{ inputs.bundle }}
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-48
@@ -17,6 +24,6 @@ jobs:
 
       - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
-          bundle: tux-kart.flatpak
-          manifest-path: net.sourceforge.TuxKart.yml
+          bundle: ${{ inputs.bundle }}
+          manifest-path: ${{ inputs.manifest-path }}
           cache-key: flatpak-builder-${{ github.sha }}

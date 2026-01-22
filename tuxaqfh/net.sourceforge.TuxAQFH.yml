@@ -1,0 +1,64 @@
+id: net.sourceforge.TuxAQFH
+runtime: org.freedesktop.Platform
+runtime-version: '25.08'
+sdk: org.freedesktop.Sdk
+command: /app/bin/run-tuxaqfh
+finish-args:
+  - --socket=x11
+  - --socket=pulseaudio
+  - --device=dri
+cleanup:
+  - /include
+  - '*.a'
+
+modules:
+  - ../plib/net.sourceforge.PLIB.yml
+
+  - name: glu
+    buildsystem: meson
+    sources:
+      - type: archive
+        url: https://archive.mesa3d.org/glu/glu-9.0.3.tar.xz
+        sha256: bd43fe12f374b1192eb15fe20e45ff456b9bc26ab57f0eee919f96ca0f8a330f
+    cleanup:
+      - /include
+      - /lib/*.a
+      - /lib/*.la
+      - /lib/pkgconfig
+
+  - name: glut
+    buildsystem: cmake
+    sources:
+      - type: archive
+        url: https://github.com/freeglut/freeglut/releases/download/v3.8.0/freeglut-3.8.0.tar.gz
+        sha256: 674dcaff25010e09e450aec458b8870d9e98c46f99538db457ab659b321d9989
+
+  - name: tuxaqfh
+    buildsystem: autotools
+    sources:
+      - type: archive
+        url: https://master.dl.sourceforge.net/project/tuxaqfh/tuxaqfh/1.0.14-classic/tux_aqfh-1.0.14.tar.gz
+        sha256: 8a6824387a21aff0ea60d5e6f8ec6c6f65491f37c2465eb8dee7929ac63a7c90
+
+      - type: patch
+        paths:
+          - patches/linker-flags.patch
+          - patches/xwayland-mouse-movement.patch
+      
+      - type: file
+        path: net.sourceforge.TuxAQFH.desktop
+
+    config-opts:
+      - --prefix=/app
+
+    post-install:
+      - |
+        ffmpeg -i /app/share/games/tux_aqfh/images/tinytux.rgb icon.png
+        install -Dm644 icon.png /app/share/icons/hicolor/32x32/apps/net.sourceforge.TuxAQFH.png
+        install -Dm644 net.sourceforge.TuxAQFH.desktop /app/share/applications/net.sourceforge.TuxAQFH.desktop
+
+      - |
+        mkdir -p /app/bin
+        echo '#!/bin/sh' > /app/bin/run-tuxaqfh
+        echo 'exec padsp /app/games/tux_aqfh "$@"' >> /app/bin/run-tuxaqfh
+        chmod +x /app/bin/run-tuxaqfh

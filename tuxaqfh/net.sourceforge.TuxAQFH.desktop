@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Tux the Penguin: A Quest for Herring
+Icon=net.sourceforge.TuxAQFH
+Exec=run-tuxaqfh
+Terminal=false
+Categories=Game;ArcadeGame;
+Keywords=rpg;tux;linux;
+StartupNotify=false
